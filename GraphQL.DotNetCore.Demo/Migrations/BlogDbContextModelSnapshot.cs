@@ -38,21 +38,21 @@ namespace GraphQL.DotNetCore.Demo.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("BlogPostId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Email")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("PostId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("Text")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PostId");
+                    b.HasIndex("BlogPostId");
 
                     b.ToTable("Comments");
                 });
@@ -84,9 +84,9 @@ namespace GraphQL.DotNetCore.Demo.Migrations
 
             modelBuilder.Entity("GraphQL.DotNetCore.Demo.Models.Comment", b =>
                 {
-                    b.HasOne("GraphQL.DotNetCore.Demo.Models.Post", "Post")
+                    b.HasOne("GraphQL.DotNetCore.Demo.Models.Post", "BlogPost")
                         .WithMany("Comments")
-                        .HasForeignKey("PostId")
+                        .HasForeignKey("BlogPostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -94,7 +94,7 @@ namespace GraphQL.DotNetCore.Demo.Migrations
             modelBuilder.Entity("GraphQL.DotNetCore.Demo.Models.Post", b =>
                 {
                     b.HasOne("GraphQL.DotNetCore.Demo.Models.Author", "Author")
-                        .WithMany("BlogPosts")
+                        .WithMany()
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

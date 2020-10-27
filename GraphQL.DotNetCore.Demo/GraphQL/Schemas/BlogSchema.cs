@@ -1,4 +1,5 @@
-﻿using GraphQL.DotNetCore.Demo.GraphQL.Queries;
+﻿using GraphQL.DotNetCore.Demo.GraphQL.Mutations;
+using GraphQL.DotNetCore.Demo.GraphQL.Queries;
 using GraphQL.Types;
 
 namespace GraphQL.DotNetCore.Demo.GraphQL.Schemas
@@ -9,6 +10,7 @@ namespace GraphQL.DotNetCore.Demo.GraphQL.Schemas
             : base(resolver)
         {
             Query = resolver.Resolve<Query>();
+            Mutation = resolver.Resolve<Mutation>();
         }
     }
 }

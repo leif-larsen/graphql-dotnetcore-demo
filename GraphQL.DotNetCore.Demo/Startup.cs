@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using GraphQL.DotNetCore.Demo.GraphQL.Mutations;
 
 namespace GraphQL.DotNetCore.Demo
 {
@@ -37,7 +38,9 @@ namespace GraphQL.DotNetCore.Demo
             services.AddScoped<CommentType>();
             services.AddScoped<AuthorType>();
             services.AddScoped<BlogPostQueryGraphType>();
+            services.AddScoped<PostCommentMutationGraphType>();
             services.AddScoped<Query>();
+            services.AddScoped<Mutation>();
             services.AddScoped<BlogSchema>();
 
             services.AddGraphQL(x =>

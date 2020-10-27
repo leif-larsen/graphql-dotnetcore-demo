@@ -13,8 +13,6 @@ namespace GraphQL.DotNetCore.Demo.GraphQL.Types
             Field(f => f.Name).Description("Comment author name");
             Field(f => f.Email).Description("Comment author email");
             Field(f => f.Text).Description("Comment content");
-
-            //Field(f => f.Post, type: typeof(PostType)).Description("Associated blog post");
         }
     }
 }
