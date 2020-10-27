@@ -1,4 +1,6 @@
-﻿namespace GraphQL.DotNetCore.Demo.Models
+﻿using System.Collections.Generic;
+
+namespace GraphQL.DotNetCore.Demo.Models
 {
     public class Author
     {

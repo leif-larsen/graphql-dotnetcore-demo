@@ -1,15 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using GraphQL.DotNetCore.Demo.GraphQL.Queries;
+using GraphQL.DotNetCore.Demo.GraphQL.Schemas;
+using GraphQL.DotNetCore.Demo.GraphQL.Types;
+using GraphQL;
+using GraphQL.Server;
+using GraphQL.Server.Ui.Playground;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 namespace GraphQL.DotNetCore.Demo
 {
@@ -25,7 +25,26 @@ namespace GraphQL.DotNetCore.Demo
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
+            services.Configure<KestrelServerOptions>(options => options.AllowSynchronousIO = true);
+            services.Configure<IISServerOptions>(options => options.AllowSynchronousIO = true);
+
+            services.AddScoped<IDependencyResolver>(x =>
+                new FuncDependencyResolver(x.GetRequiredService));
+
+            services.AddScoped<PostType>();
+            services.AddScoped<CommentType>();
+            services.AddScoped<AuthorType>();
+            services.AddScoped<BlogPostQueryGraphType>();
+            services.AddScoped<Query>();
+            services.AddScoped<BlogSchema>();
+
+            services.AddGraphQL(x =>
+            {
+                x.ExposeExceptions = true; //set true only in development mode. make it switchable.                
+            })
+            .AddGraphTypes(ServiceLifetime.Scoped);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -37,10 +56,14 @@ namespace GraphQL.DotNetCore.Demo
             }
 
             app.UseHttpsRedirection();
+            
 
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseGraphQL<BlogSchema>("/graphql");
+            app.UseGraphQLPlayground(options: new GraphQLPlaygroundOptions());
 
             app.UseEndpoints(endpoints =>
             {
